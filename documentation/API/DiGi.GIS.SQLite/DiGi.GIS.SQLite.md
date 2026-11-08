@@ -21,7 +21,7 @@ Inheritance [System\.Object](https://learn.microsoft.com/en-us/dotnet/api/system
 Converts a SQLite file at the specified path into a [DiGi\.GIS\.Classes\.GISModel](https://learn.microsoft.com/en-us/dotnet/api/digi.gis.classes.gismodel 'DiGi\.GIS\.Classes\.GISModel') object\.
 
 ```csharp
-public static DiGi.GIS.Classes.GISModel ToDiGi(string path);
+public static DiGi.GIS.Classes.GISModel? ToDiGi(string path);
 ```
 #### Parameters
 
@@ -42,7 +42,7 @@ A [DiGi\.GIS\.Classes\.GISModel](https://learn.microsoft.com/en-us/dotnet/api/di
 Deserializes a collection of objects implementing [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject') using an existing SQLite connection\.
 
 ```csharp
-public static System.Collections.Generic.List<T> ToDiGi<T>(SqliteConnection sqliteConnection, System.Func<T,bool> func=null)
+public static System.Collections.Generic.List<T>? ToDiGi<T>(SqliteConnection sqliteConnection, System.Func<T,bool>? func=null)
     where T : DiGi.Core.Interfaces.ISerializableObject;
 ```
 #### Type parameters
@@ -77,7 +77,7 @@ A list of deserialized objects of type \<typeparam ref="T" /\>, or null if the c
 Deserializes a collection of objects implementing [DiGi\.Core\.Interfaces\.ISerializableObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iserializableobject 'DiGi\.Core\.Interfaces\.ISerializableObject') from a SQLite database file at the specified path\.
 
 ```csharp
-public static System.Collections.Generic.List<T> ToDiGi<T>(string path, System.Func<T,bool> func=null)
+public static System.Collections.Generic.List<T>? ToDiGi<T>(string path, System.Func<T,bool>? func=null)
     where T : DiGi.Core.Interfaces.ISerializableObject;
 ```
 #### Type parameters
@@ -282,7 +282,7 @@ Generates a unique string reference for the specified [DiGi\.Core\.Interfaces\.I
 If the object implements [DiGi\.Core\.Interfaces\.IUniqueObject](https://learn.microsoft.com/en-us/dotnet/api/digi.core.interfaces.iuniqueobject 'DiGi\.Core\.Interfaces\.IUniqueObject'), its own reference is used; otherwise, a hash code of its JSON representation is returned\.
 
 ```csharp
-public static string Reference(this DiGi.Core.Interfaces.ISerializableObject serializableObject);
+public static string? Reference(this DiGi.Core.Interfaces.ISerializableObject serializableObject);
 ```
 #### Parameters
 

@@ -21,14 +21,14 @@ namespace DiGi.GIS.SQLite
                 return false;
             }
 
-            string path = sQLiteExtractOptions.SourcePath;
+            string? path = sQLiteExtractOptions.SourcePath;
 
             if (string.IsNullOrWhiteSpace(path) || !File.Exists(path))
             {
                 return false;
             }
 
-            string directory = sQLiteExtractOptions.DestionationDirectory;
+            string? directory = sQLiteExtractOptions.DestionationDirectory;
             if (!Directory.Exists(directory))
             {
                 Directory.CreateDirectory(directory);
@@ -43,7 +43,7 @@ namespace DiGi.GIS.SQLite
                     continue;
                 }
 
-                using ZipArchive zipArchive_ZipArchieve = new ZipArchive(deflateStream);
+                using ZipArchive zipArchive_ZipArchieve = new(deflateStream);
 
                 foreach (ZipArchiveEntry zipArchiveEntry_Zip in zipArchive_ZipArchieve.Entries)
                 {
@@ -62,9 +62,9 @@ namespace DiGi.GIS.SQLite
                         continue;
                     }
 
-                    ZipArchive zipArchive_Files = new ZipArchive(deflateStream_Zip);
+                    ZipArchive zipArchive_Files = new(deflateStream_Zip);
 
-                    SlownikObiektowGeometrycznych slownikObiektowGeometrycznych = new SlownikObiektowGeometrycznych();
+                    SlownikObiektowGeometrycznych slownikObiektowGeometrycznych = new();
 
                     foreach (ZipArchiveEntry zipArchiveEntry_File in zipArchive_Files.Entries)
                     {
@@ -79,9 +79,9 @@ namespace DiGi.GIS.SQLite
                         continue;
                     }
 
-                    DirectorySource directorySource = new DirectorySource(zipArchiveEntry_Zip.FullName);
+                    DirectorySource directorySource = new(zipArchiveEntry_Zip.FullName);
 
-                    GISModel gISModel = null; //GIS.Convert.ToDiGi(slownikObiektowGeometrycznych, directorySource);
+                    GISModel? gISModel = null; //GIS.Convert.ToDiGi(slownikObiektowGeometrycznych, directorySource);
                     if (gISModel == null)
                     {
                         continue;

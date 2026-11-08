@@ -13,13 +13,13 @@ namespace DiGi.GIS.SQLite.Classes
         /// Gets or sets the file path to the source SQLite database.
         /// </summary>
         [JsonInclude, JsonPropertyName("SourcePath")]
-        public string SourcePath { get; set; } = null;
+        public string? SourcePath { get; set; }
 
         /// <summary>
         /// Gets or sets the directory where the extracted data will be saved.
         /// </summary>
         [JsonInclude, JsonPropertyName("DestionationDirectory")]
-        public string DestionationDirectory { get; set; } = null;
+        public string? DestionationDirectory { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether existing files in the destination directory should be updated during extraction.

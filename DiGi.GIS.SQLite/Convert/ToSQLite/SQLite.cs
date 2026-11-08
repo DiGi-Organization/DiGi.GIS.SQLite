@@ -23,21 +23,21 @@ namespace DiGi.GIS.SQLite
                 return false;
             }
 
-            List<ISerializableObject> serializableObjects = new List<ISerializableObject>();
+            List<ISerializableObject> serializableObjects = new();
 
-            ISource source = gISModel.GetObject<ISource>();
+            ISource? source = gISModel.GetObject<ISource>();
             if (source != null)
             {
                 serializableObjects.Add(source);
             }
 
-            List<IGISUniqueObject> gISUniqueObjects = gISModel.GetObjects<IGISUniqueObject>();
+            List<IGISUniqueObject>? gISUniqueObjects = gISModel.GetObjects<IGISUniqueObject>();
             if (gISUniqueObjects != null)
             {
                 serializableObjects.AddRange(gISUniqueObjects);
             }
 
-            List<IGISRelation> gISRelations = gISModel.GetRelations<IGISRelation>();
+            List<IGISRelation>? gISRelations = gISModel.GetRelations<IGISRelation>();
             if (gISRelations != null)
             {
                 serializableObjects.AddRange(gISRelations);
@@ -62,7 +62,7 @@ namespace DiGi.GIS.SQLite
 
             bool result = false;
 
-            using (SqliteConnection sqliteConnection = new SqliteConnection($"Data Source={path}"))
+            using (SqliteConnection sqliteConnection = new($"Data Source={path}"))
             {
                 try
                 {
@@ -97,16 +97,21 @@ namespace DiGi.GIS.SQLite
                 return false;
             }
 
-            Dictionary<string, List<T>> dictionary = new Dictionary<string, List<T>>();
+            Dictionary<string, List<T>> dictionary = new();
             foreach (T serializableObject in serializableObjects)
             {
-                string fullTypeName = Core.Query.FullTypeName(serializableObject?.GetType());
-                if (string.IsNullOrWhiteSpace(fullTypeName))
+                if (serializableObject is null)
+                {
+                    continue; // FullTypeName(null) is null, so a null item was always skipped here
+                }
+
+                string? fullTypeName = Core.Query.FullTypeName(serializableObject.GetType());
+                if (fullTypeName is null || string.IsNullOrWhiteSpace(fullTypeName))
                 {
                     continue;
                 }
 
-                if (!dictionary.TryGetValue(fullTypeName, out List<T> serializableObjects_Temp) || serializableObjects_Temp == null)
+                if (!dictionary.TryGetValue(fullTypeName, out List<T>? serializableObjects_Temp) || serializableObjects_Temp == null)
                 {
                     serializableObjects_Temp = new List<T>();
                     dictionary[fullTypeName] = serializableObjects_Temp;
@@ -115,7 +120,7 @@ namespace DiGi.GIS.SQLite
                 serializableObjects_Temp.Add(serializableObject);
             }
 
-            using (SqliteCommand sqliteCommand = new SqliteCommand() { Connection = sqliteConnection })
+            using (SqliteCommand sqliteCommand = new() { Connection = sqliteConnection })
             {
                 sqliteCommand.CommandText = @"CREATE TABLE IF NOT EXISTS Types (Id INTEGER PRIMARY KEY AUTOINCREMENT, FullTypeName TEXT NOT NULL UNIQUE)";
                 sqliteCommand.ExecuteNonQuery();
@@ -154,10 +159,10 @@ namespace DiGi.GIS.SQLite
 
                     sqliteCommand.Parameters.Clear();
 
-                    SqliteParameter sqliteParameter_Reference = new SqliteParameter("@Reference", SqliteType.Text);
+                    SqliteParameter sqliteParameter_Reference = new("@Reference", SqliteType.Text);
                     sqliteCommand.Parameters.Add(sqliteParameter_Reference);
 
-                    SqliteParameter sqliteParameter_Json = new SqliteParameter("@Json", SqliteType.Text);
+                    SqliteParameter sqliteParameter_Json = new("@Json", SqliteType.Text);
                     sqliteCommand.Parameters.Add(sqliteParameter_Json);
 
                     foreach (T serializableObject in keyValuePair.Value)
@@ -167,13 +172,13 @@ namespace DiGi.GIS.SQLite
                             continue;
                         }
 
-                        string reference = serializableObject.Reference();
+                        string? reference = serializableObject.Reference();
                         if (reference == null)
                         {
                             continue;
                         }
 
-                        string json = Core.Convert.ToSystem_String(serializableObject);
+                        string? json = Core.Convert.ToSystem_String(serializableObject);
                         if (json == null)
                         {
                             continue;
@@ -203,7 +208,7 @@ namespace DiGi.GIS.SQLite
                 return false;
             }
 
-            using (SQLiteWrapper sQLiteWrapper = new SQLiteWrapper())
+            using (SQLiteWrapper sQLiteWrapper = new())
             {
                 sQLiteWrapper.ConnectionString = DiGi.SQLite.Query.ConnectionString(path);
                 sQLiteWrapper.Add(gISModel);

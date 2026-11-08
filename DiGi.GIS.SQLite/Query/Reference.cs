@@ -13,7 +13,7 @@ namespace DiGi.GIS.SQLite
         /// </summary>
         /// <param name="serializableObject">The serializable object for which to generate a unique reference.</param>
         /// <returns>A unique string reference identifying the object, or <c>null</c> if the provided <paramref name="serializableObject"/> is null.</returns>
-        public static string Reference(this ISerializableObject serializableObject)
+        public static string? Reference(this ISerializableObject serializableObject)
         {
             if (serializableObject == null)
             {
@@ -25,7 +25,7 @@ namespace DiGi.GIS.SQLite
                 return ((IUniqueObject)serializableObject).Reference();
             }
 
-            return Core.Convert.ToSystem_String(serializableObject).GetHashCode().ToString(System.Globalization.CultureInfo.InvariantCulture);
+            return Core.Convert.ToSystem_String(serializableObject)!.GetHashCode().ToString(System.Globalization.CultureInfo.InvariantCulture);
         }
     }
 }

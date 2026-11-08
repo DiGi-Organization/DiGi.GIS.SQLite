@@ -14,16 +14,16 @@ namespace DiGi.GIS.SQLite
         /// <param name="path">The file system path to the SQLite database file.</param>
         /// <param name="func">An optional predicate function used to filter the deserialized objects.</param>
         /// <returns>A list of deserialized objects of type <typeparam ref="T"/>, or null if the path is invalid or the file does not exist.</returns>
-        public static List<T> ToDiGi<T>(string path, Func<T, bool> func = null) where T : ISerializableObject
+        public static List<T>? ToDiGi<T>(string path, Func<T, bool>? func = null) where T : ISerializableObject
         {
             if (string.IsNullOrWhiteSpace(path) || !System.IO.File.Exists(path))
             {
                 return null;
             }
 
-            List<T> result = new List<T>();
+            List<T>? result = new();
 
-            using (SqliteConnection sqliteConnection = new SqliteConnection($"Data Source={path}"))
+            using (SqliteConnection sqliteConnection = new($"Data Source={path}"))
             {
                 try
                 {
@@ -51,25 +51,25 @@ namespace DiGi.GIS.SQLite
         /// <param name="sqliteConnection">An open <see cref="SqliteConnection"/> to the SQLite database.</param>
         /// <param name="func">An optional predicate function used to filter the deserialized objects.</param>
         /// <returns>A list of deserialized objects of type <typeparam ref="T"/>, or null if the connection is null or no compatible types are found.</returns>
-        public static List<T> ToDiGi<T>(SqliteConnection sqliteConnection, Func<T, bool> func = null) where T : ISerializableObject
+        public static List<T>? ToDiGi<T>(SqliteConnection sqliteConnection, Func<T, bool>? func = null) where T : ISerializableObject
         {
             if (sqliteConnection == null)
             {
                 return null;
             }
 
-            using (SqliteCommand sqliteCommand = new SqliteCommand() { Connection = sqliteConnection })
+            using (SqliteCommand sqliteCommand = new() { Connection = sqliteConnection })
             {
                 sqliteCommand.CommandText = "SELECT Id, FullTypeName FROM Types";
 
-                List<Tuple<int, Type>> tuples = new List<Tuple<int, Type>>();
+                List<Tuple<int, Type>> tuples = new();
                 using (SqliteDataReader sqliteDataReader = sqliteCommand.ExecuteReader())
                 {
                     while (sqliteDataReader.Read())
                     {
                         string fullTypeName = sqliteDataReader.GetString(1);
 
-                        Type type = Core.Query.Type(fullTypeName);
+                        Type? type = Core.Query.Type(fullTypeName);
                         if (type == null)
                         {
                             continue;
@@ -91,7 +91,7 @@ namespace DiGi.GIS.SQLite
                     return null;
                 }
 
-                List<T> result = new List<T>();
+                List<T> result = new();
 
                 foreach (Tuple<int, Type> tuple in tuples)
                 {
@@ -100,7 +100,7 @@ namespace DiGi.GIS.SQLite
                     {
                         while (sqliteDataReader.Read())
                         {
-                            List<T> ts = Core.Convert.ToDiGi<T>(sqliteDataReader.GetString(0));
+                            List<T>? ts = Core.Convert.ToDiGi<T>(sqliteDataReader.GetString(0));
                             if (ts == null || ts.Count == 0)
                             {
                                 continue;

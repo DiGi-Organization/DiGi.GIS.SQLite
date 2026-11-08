@@ -74,7 +74,7 @@ The [System\.Text\.Json\.Nodes\.JsonObject](https://learn.microsoft.com/en-us/do
 Gets or sets the directory where the extracted data will be saved\.
 
 ```csharp
-public string DestionationDirectory { get; set; }
+public string? DestionationDirectory { get; set; }
 ```
 
 #### Property Value
@@ -87,7 +87,7 @@ public string DestionationDirectory { get; set; }
 Gets or sets the file path to the source SQLite database\.
 
 ```csharp
-public string SourcePath { get; set; }
+public string? SourcePath { get; set; }
 ```
 
 #### Property Value

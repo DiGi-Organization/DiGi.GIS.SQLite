@@ -11,21 +11,21 @@ namespace DiGi.GIS.SQLite
         /// </summary>
         /// <param name="path">The file system path to the SQLite database file.</param>
         /// <returns>A <see cref="GISModel"/> instance if the file exists and contains valid data; otherwise, null.</returns>
-        public static GISModel ToDiGi(string path)
+        public static GISModel? ToDiGi(string path)
         {
             if (string.IsNullOrWhiteSpace(path) || !System.IO.File.Exists(path))
             {
                 return null;
             }
 
-            GISModel result = null;
+            GISModel? result = null;
 
-            using (SQLiteWrapper sQLiteWrapper = new SQLiteWrapper())
+            using (SQLiteWrapper sQLiteWrapper = new())
             {
                 sQLiteWrapper.ConnectionString = DiGi.SQLite.Query.ConnectionString(path);
                 sQLiteWrapper.Read();
 
-                List<GISModel> gISModels = sQLiteWrapper.GetSerializableObjects<GISModel>();
+                List<GISModel>? gISModels = sQLiteWrapper.GetSerializableObjects<GISModel>();
                 if (gISModels == null || gISModels.Count == 0)
                 {
                     return result;
